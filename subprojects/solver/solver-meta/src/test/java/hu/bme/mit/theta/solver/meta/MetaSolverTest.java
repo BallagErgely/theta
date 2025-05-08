@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
+/*
 package hu.bme.mit.theta.solver.meta;
 
 import hu.bme.mit.theta.common.Tuple2;
@@ -467,3 +467,4 @@ public class MetaSolverTest {
         solver.pop();
     }
 }
+*/

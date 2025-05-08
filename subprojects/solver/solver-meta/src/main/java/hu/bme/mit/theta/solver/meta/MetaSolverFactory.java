@@ -51,11 +51,12 @@ public final class MetaSolverFactory implements SolverFactory {
 
     @Override
     public ItpSolver createItpSolver() {
-        List<ItpSolver> solvers = new ArrayList<>(solverFactories.size());
-        for (SolverFactory solverFactory : solverFactories) {
-            solvers.add(solverFactory.createItpSolver());
-        }
-        return new MetaItpSolver(solvers);
+        throw new UnsupportedOperationException();
+        //List<ItpSolver> solvers = new ArrayList<>(solverFactories.size());
+        //for (SolverFactory solverFactory : solverFactories) {
+        //    solvers.add(solverFactory.createItpSolver());
+        //}
+        //return new MetaItpSolver(solvers);
     }
 
     public HornSolver createHornSolver() {

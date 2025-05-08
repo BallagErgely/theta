@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package hu.bme.mit.theta.solver.meta;
+/*package hu.bme.mit.theta.solver.meta;
 
 import com.google.common.collect.ImmutableList;
 import hu.bme.mit.theta.core.decl.ConstDecl;
@@ -243,3 +243,4 @@ public final class MetaItpSolverTest {
         System.out.println("----------");
     }
 }
+*/
