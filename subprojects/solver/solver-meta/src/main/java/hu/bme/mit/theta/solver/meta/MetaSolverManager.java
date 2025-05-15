@@ -19,6 +19,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 import hu.bme.mit.theta.solver.*;
+import hu.bme.mit.theta.solver.smtlib.SmtLibSolverManager;
+import hu.bme.mit.theta.solver.validator.SolverValidatorWrapperFactory;
 import hu.bme.mit.theta.solver.z3.Z3SolverFactory;
 import hu.bme.mit.theta.solver.z3legacy.Z3LegacySolverFactory;
 
@@ -47,9 +49,12 @@ public final class MetaSolverManager extends SolverManager {
     @Override
     public SolverFactory getSolverFactory(final String name) {
         checkArgument(NAME.equals(name));
-        return new ManagedFactory(new MetaSolverFactory(List.of(
-                Z3LegacySolverFactory.getInstance(),
-                Z3SolverFactory.getInstance())));
+        try {
+            return new ManagedFactory(new MetaSolverFactory(List.of(
+                    SolverValidatorWrapperFactory.create("mathsat:fp"))));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
