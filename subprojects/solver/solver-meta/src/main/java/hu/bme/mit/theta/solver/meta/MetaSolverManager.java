@@ -51,7 +51,8 @@ public final class MetaSolverManager extends SolverManager {
         checkArgument(NAME.equals(name));
         try {
             return new ManagedFactory(new MetaSolverFactory(List.of(
-                    SolverValidatorWrapperFactory.create("mathsat:fp"))));
+                    SolverValidatorWrapperFactory.create("mathsat:fp"),
+                    SmtLibSolverManager.resolveSolverFactory("cvc5:1.0.8")))); //default veryió enélkül
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
