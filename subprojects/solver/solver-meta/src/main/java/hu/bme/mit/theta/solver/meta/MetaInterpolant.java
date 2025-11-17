@@ -28,11 +28,15 @@ public class MetaInterpolant implements Interpolant {
     private final ItpSolver solver;
     private final Interpolant interpolant;
     public MetaInterpolant( final ItpSolver solver, final Interpolant interpolant ) {
+
+        System.out.println("creating MetaInterpolant using interpolant from " + solver.getClass().getSimpleName());
+
         this.solver = solver;
         this.interpolant = interpolant;
     }
     @Override
     public Expr<BoolType> eval(ItpMarker marker) {
+        System.out.println("eval MetaInterpolant using interpolant from " + solver.getClass().getSimpleName());
         checkArgument(marker instanceof MetaItpMarker);
         return interpolant.eval(((MetaItpMarker) marker).getMarker(solver));
     }

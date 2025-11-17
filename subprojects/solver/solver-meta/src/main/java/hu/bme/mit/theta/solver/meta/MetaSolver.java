@@ -39,17 +39,25 @@ class MetaSolver implements  Solver {
     private final List<Integer> pushes = new ArrayList<>();
 
     MetaSolver(List<Solver> solvers) {
+        var names = solvers.stream().map(Object::getClass).map(Class::getSimpleName).toList();
+        logging("construct MetaSolver with " + String.join("; ", names));
+
         this.solvers = solvers;
         solver = solvers.get(currentSolverIndex);
     }
 
     @Override
     public void add(Expr<BoolType> assertion) {
+
+        logging("adding " + assertion + " to " + solver.getClass().getSimpleName());
+
         assertions.add(assertion);
         try {
             solver.add(assertion);
         }
         catch (Exception|Error e) {
+            logging("error adding " + assertion + " to " + solver.getClass().getSimpleName());
+            logging("switching");
             switchSolvers();
         }
 
@@ -58,9 +66,12 @@ class MetaSolver implements  Solver {
     @Override
     public SolverStatus check() {
         try {
+            logging("checking with " + solver.getClass().getSimpleName());
             return solver.check();
         }
         catch (Exception|Error e) {
+            logging("error checking with " + solver.getClass().getSimpleName() + ": " + e.getMessage());
+            logging("switching");
             switchSolvers();
             return check();
         }
@@ -68,6 +79,9 @@ class MetaSolver implements  Solver {
 
     @Override
     public void push() {
+
+        logging("push");
+
         assertions.push();
         pushes.add(assertions.toCollection().size());
         solver.push();
@@ -75,6 +89,9 @@ class MetaSolver implements  Solver {
 
     @Override
     public void pop(int n) {
+
+        logging("pop " + n);
+
         assertions.pop(n);
         solver.pop(n);
         for (int i = 0; i < n; i++) {
@@ -84,7 +101,11 @@ class MetaSolver implements  Solver {
 
     @Override
     public void reset() {
+
+        logging("reset");
+
         for (Solver s : solvers) {
+            logging("resetting " + s.getClass().getSimpleName());
             s.reset();
         }
         currentSolverIndex = 0;
@@ -94,9 +115,11 @@ class MetaSolver implements  Solver {
     @Override
     public SolverStatus getStatus() {
         try {
+            logging("getting status of " + solver.getClass().getSimpleName());
             return solver.getStatus();
         }
         catch (Exception|Error e) {
+            logging("error getting status of " + solver.getClass().getSimpleName() + ": " + e.getMessage());
             switchSolvers();
             check();
             return getStatus();
@@ -106,9 +129,11 @@ class MetaSolver implements  Solver {
     @Override
     public Valuation getModel() {
         try {
+            logging("getting model of " + solver.getClass().getSimpleName());
             return solver.getModel();
         }
         catch (Exception|Error e) {
+            logging("error getting model of " + solver.getClass().getSimpleName() + ": " + e.getMessage());
             switchSolvers();
             check();
             return getModel();
@@ -117,17 +142,22 @@ class MetaSolver implements  Solver {
 
     @Override
     public Collection<Expr<BoolType>> getAssertions() {
+        logging("getting assertions");
         return solver.getAssertions();
     }
 
     @Override
     public void close() throws Exception {
+        logging("close");
         for (Solver s : solvers) {
+            logging("closing solver " + s.getClass().getSimpleName());
             s.close();
         }
     }
 
     private void switchSolvers() {
+        logging("switching solvers");
+
         checkState(currentSolverIndex != solvers.size(), "Metasolver has cycled through all of its solvers.");
         try {
             solver.close();
@@ -142,4 +172,9 @@ class MetaSolver implements  Solver {
             solver.add(assertion);
         }
     }
+
+    private void logging(String msg) {
+        System.out.println("[MetaSolver] " + msg);
+    }
+
 }

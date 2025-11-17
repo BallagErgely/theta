@@ -35,11 +35,17 @@ public class MetaItpSolver implements ItpSolver, Solver {
     private final List<MetaItpPattern> patterns = new ArrayList<>();
 
     public MetaItpSolver(List<ItpSolver> solvers) {
+        var names = solvers.stream().map(Object::getClass).map(Class::getSimpleName).toList();
+        logger("constructing MetaItpSolver with" + String.join("; ", names));
+
         this.solvers = solvers;
     }
 
     @Override
     public ItpPattern createTreePattern(ItpMarkerTree<? extends ItpMarker> root) {
+        
+        logger("creating TreePattern");
+
         Map<ItpSolver, ItpPattern> patternMap = new HashMap<>();
         // copy tree for each solver
         List<SolverResult<ItpMarkerTree<ItpMarker>>> solverResultList = allResults(solver -> new SolverResult<>(copyTree(root, solver), solver));
@@ -282,5 +288,9 @@ public class MetaItpSolver implements ItpSolver, Solver {
     private static int selectStronger(SolverResult<Interpolant> a, SolverResult<Interpolant> b) {
         // todo choose strongest
         return 0;
+    }
+
+    private static void logger(String msg) {
+        System.out.println("[MetaItpSolver] " + msg);
     }
 }

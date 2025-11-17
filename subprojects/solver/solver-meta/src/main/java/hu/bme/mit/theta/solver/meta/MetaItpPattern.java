@@ -29,11 +29,16 @@ public class MetaItpPattern implements ItpPattern {
     private final Map<ItpSolver, ItpPattern> patternMap;
 
     public MetaItpPattern(Map<ItpSolver, ItpPattern> patternMap) {
+        var names = patternMap.keySet().stream().map(Object::getClass).map(Class::getName).toList();
+
+        System.out.println("creating MetaItpPattern with " + String.join(", ", names));
+
         this.patternMap = new ConcurrentHashMap<>(patternMap);
     }
 
     @Override
     public <E> E visit(ItpPatternVisitor<E> visitor) {
+        System.out.println("visiting MetaItpPattern with " + visitor.getClass().getName());
         ExecutorService executorService = Executors.newFixedThreadPool(patternMap.size());
         List<Callable<E>> tasks = new ArrayList<>();
 
@@ -51,6 +56,7 @@ public class MetaItpPattern implements ItpPattern {
     }
 
     public ItpPattern getPattern(ItpSolver solver) {
+        System.out.println("getting pattern for " + solver);
         return patternMap.get(solver);
     }
 

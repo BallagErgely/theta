@@ -25,9 +25,13 @@ public class MetaItpMarker implements ItpMarker {
     private final Map<ItpSolver, ItpMarker> markerMap;
 
     public MetaItpMarker(Map<ItpSolver, ItpMarker> markerMap) {
+        var names = markerMap.keySet().stream().map(Object::getClass).map(Class::getSimpleName).toList();
+
+        System.out.println("creating MetaItpMarker with " + String.join(", ", names));
         this.markerMap = markerMap;
     }
     public ItpMarker getMarker(ItpSolver solver) {
+        System.out.println("[MetaItpMarker] getMarker for " + solver.getClass().getSimpleName());
         return markerMap.get(solver);
     }
 }
